@@ -39,6 +39,7 @@ def task(graph_client, group):
 
     group['owners'] = []
     owners = get(graph_client, f"https://graph.microsoft.com/beta/groups/{group['id']}/owners")['value']
+    #TODO: handle pagination to get more than 100 owners
     for owner in owners:
         if "mail" in owner:
             group['owners'].append(owner['mail'])
@@ -47,6 +48,7 @@ def task(graph_client, group):
 
     group['members'] = []
     members = get(graph_client, f"https://graph.microsoft.com/beta/groups/{group['id']}/members")['value']
+    #TODO: handle pagination to get more than 100 members
     for member in members:
         if "mail" in member:
             group['members'].append(member['mail'])
@@ -60,6 +62,7 @@ def enumerate_groups(graph_client):
     url = "https://graph.microsoft.com/beta/groups?" \
           "$filter=groupTypes/any(c:c+eq+'Unified')&" \
           "$select=displayName,visibility,id,description,mailEnabled,mail,mailNickname,resourceProvisioningOptions"
+    # get more than 100 (by default) groups by implementing pagination
     while True:
         req = get(graph_client, url)
         groups += req['value']
