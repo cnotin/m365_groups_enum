@@ -1,4 +1,7 @@
 # Enumerate Microsoft 365 Groups in a tenant with their metadata
+
+<img src="m365-groups-logo.png" width="200px" height="200px" alt="" />
+
 ## Description
 The `all_groups.py` script allows to enumerate all Microsoft 365 Groups in a Azure AD tenant with their metadata:
 * name
