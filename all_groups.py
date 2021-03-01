@@ -29,7 +29,9 @@ def get(graph_client, url):
         return resp.json()
 
 
-def task(graph_client, group):
+def task(graph_client, sharepoint_url, group):
+    group['sharepoint'] = f"{sharepoint_url}/sites/{group['mailNickname']}"
+
     group["hasTeams"] = "Team" in group['resourceProvisioningOptions']
 
     if len(group['resourceProvisioningOptions']) == 0:
@@ -39,7 +41,7 @@ def task(graph_client, group):
 
     group['owners'] = []
     owners = get(graph_client, f"https://graph.microsoft.com/beta/groups/{group['id']}/owners")['value']
-    #TODO: handle pagination to get more than 100 owners
+    # TODO: handle pagination to get more than 100 owners
     for owner in owners:
         if "mail" in owner:
             group['owners'].append(owner['mail'])
@@ -48,7 +50,7 @@ def task(graph_client, group):
 
     group['members'] = []
     members = get(graph_client, f"https://graph.microsoft.com/beta/groups/{group['id']}/members")['value']
-    #TODO: handle pagination to get more than 100 members
+    # TODO: handle pagination to get more than 100 members
     for member in members:
         if "mail" in member:
             group['members'].append(member['mail'])
@@ -57,6 +59,17 @@ def task(graph_client, group):
 
 
 def enumerate_groups(graph_client):
+    print("Guessing SharePoint default URL... ", end='')
+    sharepoint_url = None
+    try:
+        domains = get(graph_client, "https://graph.microsoft.com/beta/organization")["value"][0]["verifiedDomains"]
+        main_domain = next(d for d in domains if d["isInitial"])['name'].replace(".onmicrosoft.com", "")
+        sharepoint_url = f"https://{main_domain}.sharepoint.com"
+        print(sharepoint_url)
+    except Exception as e:
+        print("failed")
+        pass
+
     groups = []
     print("Getting all groups... ")
     url = "https://graph.microsoft.com/beta/groups?" \
@@ -76,7 +89,7 @@ def enumerate_groups(graph_client):
 
     cpt = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        futures = (executor.submit(task, graph_client, group) for group in groups)
+        futures = (executor.submit(task, graph_client, sharepoint_url, group) for group in groups)
         for _ in concurrent.futures.as_completed(futures):
             cpt += 1
             if cpt % 100 == 0:

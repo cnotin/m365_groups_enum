@@ -8,6 +8,7 @@ The `all_groups.py` script allows to enumerate all Microsoft 365 Groups in a Azu
 * owners
 * members
 * Teams enabled?
+* SharePoint URL (e.g. for Teams shared files)
 
 All of this, even for private Groups!
 Read more about this on FIXME_blog
