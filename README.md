@@ -14,7 +14,7 @@ The `all_groups.py` script allows to enumerate all Microsoft 365 Groups in a Azu
 * SharePoint URL (e.g. for Teams shared files)
 
 All of this, even for private Groups!
-Read more about this on my blog article ["Risks of Microsoft Teams and Microsoft 365 Groups"](https://clement.notin.org/blog/2021/03/02/risks-of-microsoft-teams-and-microsoft-365-groups/)
+Read more about this on my blog article ["Risks of Microsoft Teams and Microsoft 365 Groups"](https://clement.notin.org/blog/2021/03/01/risks-of-microsoft-teams-and-microsoft-365-groups/)
 
 The `reporting.py` script will take the JSON output from `all_groups.py` and generates a CSV files allowing to quickly identify sensitive private or public groups.
 
